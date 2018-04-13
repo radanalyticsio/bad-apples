@@ -23,43 +23,43 @@ class DatabaseLoader:
         # does table exist
         tb_exists = "select exists(" \
                     "select relname from pg_class where relname='"\
-                    + "finance" + "')"
+                    + "transactions" + "')"
         cur.execute(tb_exists)
         if cur.fetchone()[0] is False:
             # make table
             cur.execute(
                 'create table transactions('
-                'Time INT, '
-                'V1 FLOAT, '
-		        'V2 FLOAT, '
-                'V3 FLOAT, '
-                'V4 FLOAT, '
-                'V5 FLOAT, '
-                'V6 FLOAT, '
-                'V7 FLOAT, '
-                'V8 FLOAT, '
-                'V9 FLOAT, '
-                'V10 FLOAT, '
-                'V11 FLOAT, '
-                'V12 FLOAT, '
-                'V13 FLOAT, '
-                'V14 FLOAT, '
-                'V15 FLOAT, '
-                'V16 FLOAT, '
-                'V17 FLOAT, '
-                'V18 FLOAT, '
-                'V19 FLOAT, '
-                'V20 FLOAT, '
-                'V21 FLOAT, '
-                'V21 FLOAT, '
-                'V23 FLOAT, '
-                'V24 FLOAT, '
-                'V25 FLOAT, '
-                'V26 FLOAT, '
-                'V27 FLOAT, '
-                'V28 FLOAT, '
+                'Time VARCHAR, '
+                'V1 VARCHAR, '
+		        'V2 VARCHAR, '
+                'V3 VARCHAR, '
+                'V4 VARCHAR, '
+                'V5 VARCHAR, '
+                'V6 VARCHAR, '
+                'V7 VARCHAR, '
+                'V8 VARCHAR, '
+                'V9 VARCHAR, '
+                'V10 VARCHAR, '
+                'V11 VARCHAR, '
+                'V12 VARCHAR, '
+                'V13 VARCHAR, '
+                'V14 VARCHAR, '
+                'V15 VARCHAR, '
+                'V16 VARCHAR, '
+                'V17 VARCHAR, '
+                'V18 VARCHAR, '
+                'V19 VARCHAR, '
+                'V20 VARCHAR, '
+                'V21 VARCHAR, '
+                'V22 VARCHAR, '
+                'V23 VARCHAR, '
+                'V24 VARCHAR, '
+                'V25 VARCHAR, '
+                'V26 VARCHAR, '
+                'V27 VARCHAR, '
+                'V28 VARCHAR, '
                 'Amount VARCHAR, '
-                'Class INT);')
+                'Class VARCHAR);')
             conn.commit()
         # copy csv
         f = open(r'data.csv', 'r')

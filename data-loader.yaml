@@ -18,7 +18,7 @@ objects:
       spec:
         containers:
           - name: data-loader
-            image: docker.io/radanalyticsio/data-loader
+            image: docker.io/rsimmond/loader
             env:
               - name: SERVER
                 valueFrom:
