@@ -19,7 +19,8 @@ public class LimitFilter
 
     }
 
-    public Dataset filter(int limit)
+    //TODO set the return type
+    public void filter(int limit)
     {
         String url = "jdbc:postgresql://postgresl/transactionDb?user=username&password=password";
         Properties properties = new Properties();
@@ -27,6 +28,7 @@ public class LimitFilter
         //test with csv
 
         //create a spark session
+        //TODO add in oshinko
         SparkSession spark = SparkSession
                 .builder()
                 .config("spark.master", "local")
@@ -35,8 +37,9 @@ public class LimitFilter
         Dataset df = spark.read().jdbc(url, "transactions",properties).toDF();
         //coloumn constraint
         Dataset result = df.where("Amount >"+limit);
-        System.out.println("this is the result "+result.count());
-        return result;
+        List<Transaction> transactions = parseResult(result);
+        executeDroolsRules(transactions);
+
     }
 
     /**
@@ -58,8 +61,9 @@ public class LimitFilter
         return transactions;
     }
 
+    //TODO
     public void executeDroolsRules(List<Transaction> transactions)
     {
-        //add code to insert the new
+        //TODO add code to insert the new
     }
 }
