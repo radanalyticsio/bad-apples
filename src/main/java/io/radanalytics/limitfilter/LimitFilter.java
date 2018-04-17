@@ -37,8 +37,13 @@ public class LimitFilter
         Dataset df = spark.read().jdbc(url, "transactions",properties).toDF();
         //coloumn constraint
         Dataset result = df.where("Amount >"+limit);
-        List<Transaction> transactions = parseResult(result);
-        executeDroolsRules(transactions);
+
+        //insert back into postgresql
+        String table = "results";
+        result.write.mode("append").jdbc(url, results,properties);
+
+        //List<Transaction> transactions = parseResult(result);
+        //executeDroolsRules(transactions);
 
     }
 
@@ -49,6 +54,7 @@ public class LimitFilter
      */
     public List<Transaction> parseResult(Dataset result)
     {
+        //TODO add in variance values to return
         List<Transaction> transactions = new ArrayList<Transaction>();
         List<Row> rows = result.collectAsList();
         for (Row row: rows)
