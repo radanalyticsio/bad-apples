@@ -22,17 +22,16 @@ public class LimitFilter
     //TODO set the return type
     public void filter(int limit)
     {
-        String url = "jdbc:postgresql://postgresl/transactionDb?user=username&password=password";
+        String url = "jdbc:postgresql://postgresl/finance?user=username&password=password";
         Properties properties = new Properties();
         properties.setProperty("driver","org.postgresql.Driver");
+
         //test with csv
 
         //create a spark session
         //TODO add in oshinko
-        SparkSession spark = SparkSession
-                .builder()
-                .config("spark.master", "local")
-                .getOrCreate();
+        SparkSession spark = SparkSession.builder().getOrCreate();
+
 
         Dataset df = spark.read().jdbc(url, "transactions",properties).toDF();
         //coloumn constraint
@@ -40,7 +39,8 @@ public class LimitFilter
 
         //insert back into postgresql
         String table = "results";
-        result.write.mode("append").jdbc(url, results,properties);
+        df.write().mode("append").jdbc(url, table,properties);
+        //result.write.mode("append").jdbc(url, table,properties);
 
         //List<Transaction> transactions = parseResult(result);
         //executeDroolsRules(transactions);
