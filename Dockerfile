@@ -1,4 +1,4 @@
-FROM fabric8/java-centos-openjdk8-jdk
+FROM radanalyticsio/radanalytics-java-spark
 
 ADD src  .
 
@@ -8,4 +8,4 @@ ADD secret.yaml .
 
 ADD filter.yaml .
 
-CMD ["java", "src/main/java/io/radanalytics/App.java"]
+CMD ["java", "src/main/java/io/radanalytics/limitfilter/App.java"]
