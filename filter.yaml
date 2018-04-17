@@ -11,13 +11,14 @@ parameters:
 - description: The name to use for the job
   name: APPLICATION_NAME
   generate: expression
-  from: spark-[a-z0-9]{4}
+  from: filter-[a-z0-9]{4}
   required: true
 - description: Command line arguments to pass to the application
   name: APP_ARGS
 - description: Application main class for jar-based applications
   name: APP_MAIN_CLASS
 - description: List of additional spark options to pass to spark-submit (for exmaple --conf property=value --conf property=value). Note, --master and --class are set by the launcher and should not be set here
+  required: true
   name: SPARK_OPTIONS
 - description: The desired number of successful completions
   name: COMPLETIONS
@@ -38,7 +39,6 @@ parameters:
   value: "radanalyticsio/radanalytics-java-spark"
 - description: git URI
   name: GIT_URI
-  value: "https://github.com/rebeccaSimmonds19/transaction_limit"
   required: true
 objects:
   - apiVersion: v1
@@ -81,7 +81,7 @@ objects:
           forcePull: false
           from:
             kind: DockerImage
-            name: ${IMAGE}
+            name: radanalyticsio/radanalytics-java-spark
         type: Source
       triggers:
       - imageChange: {}
@@ -106,7 +106,7 @@ objects:
         spec:
           containers:
             - name: filter-spark-job
-              image: ${IMAGE}
+              image: "radanalyticsio/radanalytics-java-spark"
               env:
                 - name: OSHINKO_CLUSTER_NAME
                   value: ${OSHINKO_CLUSTER_NAME}
@@ -122,4 +122,4 @@ objects:
                   value: "true"
                 - name: OSHINKO_NAMED_CONFIG
                   value: ${OSHINKO_NAMED_CONFIG}
-          restartPolicy: Never
+          restartPolicy: OnFailure
