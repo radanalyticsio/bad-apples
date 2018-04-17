@@ -36,11 +36,9 @@ public class LimitFilter
         Dataset df = spark.read().jdbc(url, "transactions",properties).toDF();
         //coloumn constraint
         Dataset result = df.where("Amount >"+limit);
-
         //insert back into postgresql
         String table = "results";
-        df.write().mode("append").jdbc(url, table,properties);
-        //result.write.mode("append").jdbc(url, table,properties);
+        result.write().mode("append").jdbc(url, table,properties);
 
         //List<Transaction> transactions = parseResult(result);
         //executeDroolsRules(transactions);
