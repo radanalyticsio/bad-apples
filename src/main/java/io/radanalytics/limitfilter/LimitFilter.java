@@ -30,7 +30,7 @@ public class LimitFilter
 
         //create a spark session
         //TODO add in oshinko
-        SparkSession spark = SparkSession.builder().getOrCreate();
+        SparkSession spark = SparkSession.builder().appName("filter").getOrCreate();
 
 
         Dataset df = spark.read().jdbc(url, "transactions",properties).toDF();
