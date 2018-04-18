@@ -1,8 +1,19 @@
 package io.radanalytics.limitfilter;
 
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.MapFunction;
+import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.Encoder;
+import org.apache.spark.sql.Encoders;
+
+import org.kie.api.KieBase;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.StatelessKieSession;
+import org.kie.internal.command.CommandFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,23 +37,24 @@ public class LimitFilter
         Properties properties = new Properties();
         properties.setProperty("driver","org.postgresql.Driver");
 
-        //test with csv
-
         //create a spark session
         //TODO add in oshinko
         SparkSession spark = SparkSession.builder().appName("filter").getOrCreate();
+        JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
 
+        KieBase rules = loadRules();
+        Broadcast<KieBase> broadcastRules = sc.broadcast(rules);
+
+        Encoder<Transaction> transactionEncoder = Encoders.bean(Transaction.class);
 
         Dataset df = spark.read().jdbc(url, "transactions",properties).toDF();
         //coloumn constraint
-        Dataset result = df.where("Amount >"+limit);
+        Dataset result = df.where("Amount >"+limit)
+                           .map((MapFunction<Row, Transaction>) row -> executeDroolsRules(broadcastRules.value(), row), transactionEncoder);
+
         //insert back into postgresql
         String table = "results";
         result.write().mode("append").jdbc(url, table,properties);
-
-        //List<Transaction> transactions = parseResult(result);
-        //executeDroolsRules(transactions);
-
     }
 
     /**
@@ -60,14 +72,26 @@ public class LimitFilter
             Transaction t = new Transaction();
             t.setTime((Double)row.get(0));
             t.setAmount((String)row.get(29));
+            t.setV1((Double)row.get(1));
             transactions.add(t);
         }
         return transactions;
     }
 
-    //TODO
-    public void executeDroolsRules(List<Transaction> transactions)
+    public static KieBase loadRules() {
+        KieServices kieServices = KieServices.Factory.get();
+        KieContainer kieContainer = kieServices.getKieClasspathContainer();
+        return kieContainer.getKieBase();
+    }
+
+    public static Transaction executeDroolsRules(KieBase base, Row row)
     {
-        //TODO add code to insert the new
+        StatelessKieSession session = base.newStatelessKieSession();
+        Transaction t = new Transaction();
+        t.setTime(Double.parseDouble((String)row.get(0)));
+        t.setAmount((String)row.get(29));
+        t.setV1(Double.parseDouble((String)row.get(1)));
+        session.execute(CommandFactory.newInsert(t));
+        return t;
     }
 }
