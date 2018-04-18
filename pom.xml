@@ -7,6 +7,23 @@
     <version>1.0-SNAPSHOT</version>
     <name>transaction_limit</name>
     <url>http://maven.apache.org</url>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>io.radanalytics.limitfilter.App</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                ...
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
         <dependency>
