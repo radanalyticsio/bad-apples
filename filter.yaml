@@ -68,7 +68,7 @@ items:
             spec:
               containers:
                 - name: filter
-                  image: "172.30.1.1:5000/project/filter"
+                  image: "filter:latest"
                   env:
                   - name: POD_NAME
                     valueFrom:
