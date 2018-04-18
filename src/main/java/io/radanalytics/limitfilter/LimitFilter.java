@@ -22,7 +22,7 @@ public class LimitFilter
     //TODO set the return type
     public void filter(int limit)
     {
-        String url = "jdbc:postgresql://postgresl/finance?user=username&password=password";
+        String url = "jdbc:postgresql://postgresql/finance?user=username&password=password";
         Properties properties = new Properties();
         properties.setProperty("driver","org.postgresql.Driver");
 
