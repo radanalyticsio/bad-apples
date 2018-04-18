@@ -2,19 +2,19 @@ kind: List
 apiVersion: v1
 
 items:
-
+  
   - apiVersion: v1
     kind: ImageStream
     metadata:
       name: "filter"
     labels:
       application: "filter"
-      spec:
-        dockerImageRepository: "filter"
-        tags:
-        - name: latest
-          lookupPolicy:
-            local: true
+    spec:
+      dockerImageRepository: "filter"
+      tags:
+      - name: latest
+      lookupPolicy:
+        local: true
 
   - apiVersion: v1
     kind: BuildConfig
