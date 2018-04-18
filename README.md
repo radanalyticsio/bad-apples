@@ -1,5 +1,7 @@
 # transaction_limit_data_loader
 
+Create the database
+
 oc new-app --template=postgresql-persistent \
   -p POSTGRESQL_USER=username \
   -p POSTGRESQL_PASSWORD=password \
