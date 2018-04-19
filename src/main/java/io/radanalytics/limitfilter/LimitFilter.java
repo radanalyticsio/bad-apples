@@ -1,6 +1,7 @@
 package io.radanalytics.limitfilter;
 
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.FilterFunction;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Dataset;
@@ -16,6 +17,7 @@ import org.kie.api.runtime.StatelessKieSession;
 import org.kie.internal.command.CommandFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -50,11 +52,19 @@ public class LimitFilter
         Dataset df = spark.read().jdbc(url, "transactions",properties).toDF();
         //coloumn constraint
         Dataset result = df.where("Amount >"+limit)
-                           .map((MapFunction<Row, Transaction>) row -> executeDroolsRules(broadcastRules.value(), row), transactionEncoder);
+                           .map((MapFunction<Row, Transaction>) row -> executeDroolsRules(broadcastRules.value(), row), transactionEncoder)
+                           .filter((FilterFunction<Transaction>) t -> t.isFraudulent());
+
+        Result fraudulentRecords = new Result();
+        fraudulentRecords.setRecordCount(result.count());
+        Encoder<Result> fraudulentRecordsEncoder = Encoders.bean(Result.class);
+        Dataset<Result> fraudulentRecordsDS = spark.createDataset(
+                Collections.singletonList(fraudulentRecords),
+                fraudulentRecordsEncoder);
 
         //insert back into postgresql
         String table = "results";
-        result.write().mode("append").jdbc(url, table,properties);
+        fraudulentRecordsDS.write().mode("append").jdbc(url, table, properties);
     }
 
     /**
