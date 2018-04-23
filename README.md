@@ -2,9 +2,9 @@
 
 Create the database
 
-``oc new-app --template=postgresql-persistent /
-  -p POSTGRESQL_USER=username /
-  -p POSTGRESQL_PASSWORD=password /
+``oc new-app --template=postgresql-persistent 
+  -p POSTGRESQL_USER=username 
+  -p POSTGRESQL_PASSWORD=password 
   -p POSTGRESQL_DATABASE=finance``
   
 ``oc create -f secret.yaml``
