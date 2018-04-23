@@ -2,7 +2,7 @@
 
 Create the database
 
-``oc new-app --template=postgresql-persistent 
+``oc new-app --template=postgresql-ephemeral 
   -p POSTGRESQL_USER=username 
   -p POSTGRESQL_PASSWORD=password 
   -p POSTGRESQL_DATABASE=finance``
