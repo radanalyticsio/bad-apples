@@ -34,5 +34,5 @@ if __name__ == '__main__':
         '/', view_func=RootView.as_view('root'))
     app.add_url_rule(
         '/items', view_func=ItemsView.as_view('items', con))
-    app.run(port=8080)
+    app.run(host='0.0.0.0', port=8080)
     con.close()
