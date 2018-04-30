@@ -62,20 +62,16 @@ if __name__ == '__main__':
     parser.add_argument(
             '--db-host',
             dest='host',
-            help='hostname for the postgresql database, env variable DBHOST',
-            required=True)
+            help='hostname for the postgresql database, env variable DBHOST')
     parser.add_argument(
             '--db-name',
             dest='dbname',
-            help='database name to watch, env variable DBNAME',
-            required=True)
+            help='database name to watch, env variable DBNAME')
     parser.add_argument(
             '--username',
-            help='username for the database, env variable DBUSERNAME',
-            required=True)
+            help='username for the database, env variable DBUSERNAME')
     parser.add_argument(
             '--password',
-            help='password for the database, env variable DBPASSWORD',
-            required=True)
+            help='password for the database, env variable DBPASSWORD')
     args = parse_args(parser)
     main(args)
