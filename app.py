@@ -1,5 +1,7 @@
+import argparse
+import logging
 import os
-import uuid
+
 import flask
 from flask import json
 from flask import views
@@ -23,12 +25,12 @@ class ItemsView(views.MethodView):
         return json.jsonify(res)
 
 
-if __name__ == '__main__':
+def main(args):
     con = psy.connect(
-            dbname=os.environ.get('DBNAME', 'finance'),
-            user=os.environ.get('DBUSERNAME', 'username'),
-            password=os.environ.get('DBPASSWORD', 'password'),
-            host=os.environ.get('DBHOST', '127.0.0.1'))
+            host=args.host,
+            user=args.username,
+            password=args.password,
+            dbname=args.dbname)
     app = flask.Flask(__name__)
     app.add_url_rule(
         '/', view_func=RootView.as_view('root'))
@@ -36,3 +38,44 @@ if __name__ == '__main__':
         '/items', view_func=ItemsView.as_view('items', con))
     app.run(host='0.0.0.0', port=8080)
     con.close()
+
+
+def get_arg(env, default):
+    """Extract command line args, else use defaults if none given."""
+    return os.getenv(env) if os.getenv(env, '') is not '' else default
+
+
+def parse_args(parser):
+    args = parser.parse_args()
+    args.host = get_arg('DBHOST', args.host)
+    args.dbname = get_arg('DBNAME', args.dbname)
+    args.username = get_arg('DBUSERNAME', args.username)
+    args.password = get_arg('DBPASSWORD', args.password)
+    return args
+
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    logging.info('starting postgresql-watcher')
+    parser = argparse.ArgumentParser(
+            description='watch a postgresql db')
+    parser.add_argument(
+            '--db-host',
+            dest='host',
+            help='hostname for the postgresql database, env variable DBHOST',
+            required=True)
+    parser.add_argument(
+            '--db-name',
+            dest='dbname',
+            help='database name to watch, env variable DBNAME',
+            required=True)
+    parser.add_argument(
+            '--username',
+            help='username for the database, env variable DBUSERNAME',
+            required=True)
+    parser.add_argument(
+            '--password',
+            help='password for the database, env variable DBPASSWORD',
+            required=True)
+    args = parse_args(parser)
+    main(args)
