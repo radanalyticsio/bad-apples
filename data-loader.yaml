@@ -21,13 +21,13 @@ objects:
             image: docker.io/rsimmond/loader
             env:
               - name: SERVER
-                value: ${SERVER}
+                value: postgresql
               - name: DBNAME
-                value: ${DBNAME}
+                value: finance
               - name: USER
-                value: ${USER}
+                value: username
               - name: PASSWORD
-                value: ${PASSWORD}
+                value: password
         restartPolicy: OnFailure
 
 parameters:
