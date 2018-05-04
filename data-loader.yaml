@@ -21,25 +21,13 @@ objects:
             image: docker.io/rsimmond/loader
             env:
               - name: SERVER
-                valueFrom:
-                  secretKeyRef:
-                    name: data-secret
-                    key: server
+                value: ${SERVER}
               - name: DBNAME
-                valueFrom:
-                  secretKeyRef:
-                    name: data-secret
-                    key: dbname
+                value: ${DBNAME}
               - name: USER
-                valueFrom:
-                  secretKeyRef:
-                    name: data-secret
-                    key: username
+                value: ${USER}
               - name: PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: data-secret
-                    key: password
+                value: ${PASSWORD}
         restartPolicy: OnFailure
 
 parameters:
