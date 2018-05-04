@@ -31,6 +31,8 @@ items:
         git:
           uri: "https://github.com/rebeccaSimmonds19/transaction_limit"
         type: Git
+          github:
+          secret: "secret101"
       strategy:
         sourceStrategy:
           env:
