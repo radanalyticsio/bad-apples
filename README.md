@@ -34,5 +34,7 @@ You can login to psql to check using:
 
 ``
 psql -U username -d finance
+``
+``
 \d - to see tables
 ``
