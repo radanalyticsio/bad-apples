@@ -1,4 +1,8 @@
-# transaction_limit_data_loader
+# Data loader
+
+These instructions will create a postgreSQL db and then load some fraud data from kaggle into it.
+
+(data)[https://www.kaggle.com/mlg-ulb/creditcardfraud]
 
 Create the database
 
@@ -7,8 +11,10 @@ Create the database
   -p POSTGRESQL_PASSWORD=password 
   -p POSTGRESQL_DATABASE=finance``
   
-``oc create -f secret.yaml``
+Create the job to load the data
 
 ``oc create -f data-loader.yaml``
+
+Then run the job to make the data
 
 ``oc new-app --template=data-loader``
