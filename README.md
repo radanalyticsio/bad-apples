@@ -39,5 +39,5 @@ psql -U username -d finance
 
 
 ``
-\d - to see tables
+\d
 ``
