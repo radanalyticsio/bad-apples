@@ -41,7 +41,7 @@ items:
           forcePull: false
           from:
             kind: DockerImage
-            name: radanalyticsio/radanalytics-java-spark
+            name: radanalyticsio/radanalytics-java-spark:v0.4.6
         type: Source
       triggers:
       - imageChange: {}
