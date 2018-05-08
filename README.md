@@ -1,7 +1,12 @@
-# transaction_limit
-To change the limit change the hard coded calue in App.java
+# Fraud detection filter
 
-Create the image stream, buildconfig and template. Make sure you do this early to build the image stream as it takes a while
+This application uses a kaggle data which shows credit card fraud. The sample application uses Apache Spark to filter the data so that it can be passed through an expert rules engine to detect whether a transaction is fradulent using domain expert rules.
+
+# Launching the app
+
+Clone or fork the repository. 
+
+Then you must create the resources needed to launch the application. 
 
 oc create -f filter.yaml
 
