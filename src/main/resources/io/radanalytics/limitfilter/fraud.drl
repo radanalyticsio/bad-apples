@@ -4,7 +4,7 @@ import io.radanalytics.limitfilter.Transaction;
 
 rule "Detect Fraud"
   when
-    t: Transaction(v1 >-1)
+    t: Transaction(v1 >0)
   then
     t.setFraudulent(true);
 end
