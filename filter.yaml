@@ -39,7 +39,7 @@ items:
           forcePull: false
           from:
             kind: DockerImage
-            name: radanalyticsio/radanalytics-java-spark:v0.4.6
+            name: radanalyticsio/radanalytics-java-spark:stable
         type: Source
       triggers:
       - imageChange: {}
@@ -48,7 +48,7 @@ items:
       - github:
           secret: secret101
         type: GitHub
-        
+
   - apiVersion: v1
     kind: Template
     metadata:
@@ -58,12 +58,16 @@ items:
       name: SPARK_OPTIONS
     - description: The name of the spark cluster to run against. The cluster will be created if it does not exist, and a random cluster name will be chosen if this value is left blank.
       name: OSHINKO_CLUSTER_NAME
+    - description: unique name for this job run
+      name: JOB_NAME
+      from: "jdsl-[a-z0-9]{4}"
+      generate: expression
     objects:
 
       - kind: Job
         apiVersion: batch/v1
         metadata:
-          name: "filter"
+          name: ${JOB_NAME}
         spec:
           parallelism: 1
           completions: 1
