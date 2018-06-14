@@ -50,51 +50,75 @@ items:
       - github:
           secret: secret101
         type: GitHub
-
   - apiVersion: v1
     kind: Template
     metadata:
+      creationTimestamp: null
       name: filter
+    objects:
+    - apiVersion: batch/v1
+      kind: Job
+      metadata:
+        name: ${JOB_NAME}
+      spec:
+        completions: 1
+        parallelism: 1
+        template:
+          metadata:
+            name: ${JOB_NAME}
+          spec:
+            containers:
+            - env:
+              - name: DRIVER_HOST
+                value: ${JOB_NAME}-headless
+              - name: POD_NAME
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.name
+              image: filter:latest
+              name: filter
+              volumeMounts:
+              - mountPath: /etc/podinfo
+                name: podinfo
+                readOnly: false
+            restartPolicy: Never
+            serviceAccount: oshinko
+            volumes:
+            - downwardAPI:
+                items:
+                - fieldRef:
+                    fieldPath: metadata.labels
+                  path: labels
+              name: podinfo
+    - apiVersion: v1
+      kind: Service
+      metadata:
+        labels:
+          app: ${JOB_NAME}
+        name: ${JOB_NAME}-headless
+      spec:
+        clusterIP: None
+        ports:
+        - name: driver-rpc-port
+          port: 7078
+          protocol: TCP
+          targetPort: 7078
+        - name: blockmanager
+          port: 7079
+          protocol: TCP
+          targetPort: 7079
+        selector:
+          job-name: ${JOB_NAME}
     parameters:
-    - description: List of additional spark options to pass to spark-submit (for exmaple --conf property=value --conf property=value). Note, --master and --class are set by the launcher and should not be set here
+    - description: List of additional spark options to pass to spark-submit (for exmaple
+        --conf property=value --conf property=value). Note, --master and --class are set
+        by the launcher and should not be set here
       name: SPARK_OPTIONS
-    - description: The name of the spark cluster to run against. The cluster will be created if it does not exist, and a random cluster name will be chosen if this value is left blank.
+    - description: The name of the spark cluster to run against. The cluster will be created
+        if it does not exist, and a random cluster name will be chosen if this value is
+        left blank.
       name: OSHINKO_CLUSTER_NAME
     - description: unique name for this job run
-      name: JOB_NAME
-      from: "jdsl-[a-z0-9]{4}"
+      from: jdsl-[a-z0-9]{4}
       generate: expression
-    objects:
-
-      - kind: Job
-        apiVersion: batch/v1
-        metadata:
-          name: ${JOB_NAME}
-        spec:
-          parallelism: 1
-          completions: 1
-          template:
-            metadata:
-              name: ${JOB_NAME}
-            spec:
-              containers:
-                - name: filter
-                  image: "filter:latest"
-                  env:
-                  - name: POD_NAME
-                    valueFrom:
-                      fieldRef:
-                        fieldPath: metadata.name
-                  volumeMounts:
-                  - mountPath: /etc/podinfo
-                    name: podinfo
-                    readOnly: false
-              restartPolicy: Never
-              serviceAccount: oshinko
-              volumes:
-              - downwardAPI:
-                  items:
-                  - fieldRef:
-                      fieldPath: metadata.labels
-                    path: labels
-                name: podinfo
+      name: JOB_NAME
