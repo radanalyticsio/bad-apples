@@ -29,10 +29,7 @@ items:
           name: "filter:latest"
       source:
         git:
-          uri: "https://github.com/rebeccaSimmonds19/transaction_limit"
-        type: Git
-          github:
-          secret: "secret101"
+          uri: "https://github.com/elmiko/transaction_limit"
       strategy:
         sourceStrategy:
           env:
