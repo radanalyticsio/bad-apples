@@ -19,9 +19,13 @@ class ItemsView(views.MethodView):
 
     def get(self):
         cur = self.con.cursor()
-        cur.execute('select * from results')
-        res = [i[0] for i in cur.fetchall()]
-        cur.close()
+        try:
+            cur.execute('select * from results')
+            res = [i[0] for i in cur.fetchall()]
+        except Exception:
+            res = []
+        finally:
+            cur.close()
         return json.jsonify(res)
 
 
