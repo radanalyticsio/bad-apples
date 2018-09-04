@@ -14,30 +14,33 @@ class RootView(views.MethodView):
 
 
 class ItemsView(views.MethodView):
-    def __init__(self, con):
-        self.con = con
+    def __init__(self, args):
+        self.args = args
 
     def get(self):
-        cur = self.con.cursor()
-        cur.execute('select * from results')
-        res = [i[0] for i in cur.fetchall()]
+        con = psy.connect(
+                host=self.args.host,
+                user=self.args.username,
+                password=self.args.password,
+                dbname=self.args.dbname)
+        cur = con.cursor()
+        try:
+            cur.execute('select * from results')
+            res = [i[0] for i in cur.fetchall()]
+        except Exception:
+            res = []
         cur.close()
+        con.close()
         return json.jsonify(res)
 
 
 def main(args):
-    con = psy.connect(
-            host=args.host,
-            user=args.username,
-            password=args.password,
-            dbname=args.dbname)
     app = flask.Flask(__name__)
     app.add_url_rule(
         '/', view_func=RootView.as_view('root'))
     app.add_url_rule(
-        '/items', view_func=ItemsView.as_view('items', con))
+        '/items', view_func=ItemsView.as_view('items', args))
     app.run(host='0.0.0.0', port=8080)
-    con.close()
 
 
 def get_arg(env, default):
