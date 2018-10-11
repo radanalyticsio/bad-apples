@@ -13,7 +13,7 @@ Create the database
   
 Create the job to load the data
 
-``oc create -f https://raw.githubusercontent.com/rebeccaSimmonds19/transaction_limit_data_loader/master/data-loader.yaml``
+``oc create -f https://raw.githubusercontent.com/radanalyticsio/bad-apples/master/loader/data-loader.yaml``
 
 Then run the job to make the data
 
