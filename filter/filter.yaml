@@ -29,7 +29,8 @@ items:
           name: "filter:latest"
       source:
         git:
-          uri: "https://github.com/elmiko/transaction_limit"
+          uri: "https://github.com/radanalyticsio/bad-apples"
+        contextDir: "filter"
       strategy:
         sourceStrategy:
           env:
