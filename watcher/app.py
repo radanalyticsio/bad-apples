@@ -31,6 +31,7 @@ class ItemsView(views.MethodView):
             res = []
         cur.close()
         con.close()
+        res = [0] + res
         return json.jsonify(res)
 
 
