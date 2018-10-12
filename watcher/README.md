@@ -14,7 +14,8 @@ database running. The watcher will expect a table named `results` with a
 schema of `CREATE TABLE results (count int)`.
 
 ```
-oc new-app centos/python-36-centos7~https://github.com/elmiko/postgresql-watcher \
+oc new-app centos/python-36-centos7~https://github.com/radanalyticsio/bad-apples \
+  --context-dir=watcher \
   -e DBHOST=postgresql \
   -e DBNAME=finance \
   -e DBUSERNAME=username \
