@@ -18,7 +18,7 @@ objects:
       spec:
         containers:
           - name: data-loader
-            image: docker.io/rsimmond/loader
+            image: quay.io/radanalyticsio/bad-apples-loader
             env:
               - name: SERVER
                 value: postgresql
