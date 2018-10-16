@@ -45,9 +45,6 @@ items:
       - imageChange: {}
         type: ImageChange
         type: ConfigChange
-      - github:
-          secret: secret101
-        type: GitHub
   - apiVersion: v1
     kind: Template
     metadata:
@@ -74,6 +71,7 @@ items:
                   fieldRef:
                     fieldPath: metadata.name
               image: filter:latest
+              imagePullPolicy: IfNotPresent
               name: filter
               volumeMounts:
               - mountPath: /etc/podinfo
