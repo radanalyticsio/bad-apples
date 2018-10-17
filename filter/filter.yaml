@@ -42,9 +42,10 @@ items:
             name: radanalyticsio/radanalytics-java-spark:stable
         type: Source
       triggers:
-      - imageChange: {}
-        type: ImageChange
-        type: ConfigChange
+      - type: ImageChange
+        imageChange: {}
+      - type: ConfigChange
+
   - apiVersion: v1
     kind: Template
     metadata:
@@ -61,22 +62,27 @@ items:
         template:
           metadata:
             name: ${JOB_NAME}
+            annotations:
+              alpha.image.policy.openshift.io/resolve-names: "*"
           spec:
             containers:
             - env:
               - name: DRIVER_HOST
                 value: ${JOB_NAME}-headless
+              - name: APP_EXIT
+                value: "true"
+              - name: OSHINKO_DEL_CLUSTER
+                value: "true"
               - name: POD_NAME
                 valueFrom:
                   fieldRef:
                     fieldPath: metadata.name
-              image: filter:latest
-              imagePullPolicy: IfNotPresent
+              image: ${IMAGE}
               name: filter
               volumeMounts:
-              - mountPath: /etc/podinfo
-                name: podinfo
-                readOnly: false
+                - mountPath: /etc/podinfo
+                  name: podinfo
+                  readOnly: false
             restartPolicy: Never
             serviceAccount: oshinko
             volumes:
@@ -118,3 +124,6 @@ items:
       from: jdsl-[a-z0-9]{4}
       generate: expression
       name: JOB_NAME
+    - name: IMAGE
+      description: The reference for the filter image.
+      default: filter:latest
