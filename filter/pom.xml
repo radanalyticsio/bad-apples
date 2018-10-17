@@ -74,5 +74,11 @@
       <artifactId>drools-compiler</artifactId>
       <version>6.1.0.Final</version>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.5.jre7</version>
+      <type>bundle</type>
+    </dependency>
   </dependencies>
 </project>
